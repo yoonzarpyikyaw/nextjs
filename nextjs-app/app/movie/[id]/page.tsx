@@ -12,11 +12,9 @@ export const revalidate = 120;
 
 // Google Search SEO metadata generation
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { data: movie } = await supabase
-    .from('movies')
-    .select('*')
-    .eq('id', params.id)
-    .single();
+  const { data: movie } = supabase
+    ? await supabase.from('movies').select('*').eq('id', params.id).single()
+    : { data: null };
 
   if (!movie) {
     return { title: 'Movie Not Found - Family Version' };
@@ -44,11 +42,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function MovieDetailPage({ params }: Props) {
-  const { data: movie } = await supabase
-    .from('movies')
-    .select('*')
-    .eq('id', params.id)
-    .single();
+  const { data: movie } = supabase
+    ? await supabase.from('movies').select('*').eq('id', params.id).single()
+    : { data: null };
 
   if (!movie) {
     notFound();

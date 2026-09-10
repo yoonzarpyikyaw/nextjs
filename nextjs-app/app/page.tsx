@@ -6,14 +6,19 @@ import { Play, Sparkles, Star, Film, Send } from 'lucide-react';
 export const revalidate = 60; // ISR: Cache for 60 seconds, zero cost
 
 export default async function HomePage() {
-  const { data: movies, error } = await supabase
-    .from('movies')
-    .select('*')
-    .eq('status', 'active')
-    .order('pin', { ascending: false })
-    .order('year', { ascending: false });
+  let movieList: MovieRecord[] = [];
 
-  const movieList: MovieRecord[] = movies || [];
+  if (supabase) {
+    const { data: movies } = await supabase
+      .from('movies')
+      .select('*')
+      .eq('status', 'active')
+      .order('pin', { ascending: false })
+      .order('year', { ascending: false });
+
+    movieList = movies || [];
+  }
+
   const heroMovie = movieList[0];
 
   return (
